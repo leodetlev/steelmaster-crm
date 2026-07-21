@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: steelmaster-redis
+    restart: always
+    volumes:
+      - redis_data:/data
+
+  twenty:
+    image: twentycrm/twenty:latest
+    container_name: steelmaster-twenty
+    restart: always
+    environment:
+      - PG_DATABASE_URL=${DB_URL}
+      - REDIS_URL=redis://redis:6379
+      - FRONT_END_URL=http://steelmaster.atlasbot.tech
+      - SERVER_URL=http://steelmaster.atlasbot.tech
+      - ENCRYPTION_KEY=20y_s3cr3t_3ncrypt10n_st33lmast3r
+      - ACCESS_TOKEN_SECRET=20y_s3cr3t_t0k3n_st33lmast3r
+      - LOGIN_TOKEN_SECRET=20y_s3cr3t_l0g1n_st33lmast3r
+      - REFRESH_TOKEN_SECRET=20y_s3cr3t_r3fr3sh_st33lmast3r
+    ports:
+      - "4433:3000"
+    depends_on:
+      - redis
+    volumes:
+      - twenty_data:/app/docker-data
+
+volumes:
+  redis_data:
+  twenty_data:
