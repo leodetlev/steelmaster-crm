@@ -28,8 +28,8 @@ services:
     environment:
       - PG_DATABASE_URL=postgres://root:password@postgres:5432/steelmaster
       - REDIS_URL=redis://redis:6379
-      - FRONT_END_URL=http://localhost:4433
-      - SERVER_URL=http://localhost:4433
+      - FRONT_END_URL=http://steelmaster.atlasbot.tech
+      - SERVER_URL=http://steelmaster.atlasbot.tech
       - ENCRYPTION_KEY=20y_s3cr3t_3ncrypt10n_st33lmast3r
       - ACCESS_TOKEN_SECRET=20y_s3cr3t_t0k3n_st33lmast3r
       - LOGIN_TOKEN_SECRET=20y_s3cr3t_l0g1n_st33lmast3r
@@ -53,7 +53,7 @@ services:
       - DB_POSTGRESDB_DATABASE=steelmaster
       - DB_POSTGRESDB_USER=root
       - DB_POSTGRESDB_PASSWORD=password
-      - WEBHOOK_URL=http://localhost:8585
+      - WEBHOOK_URL=http://steelmaster.atlasbot.tech:8585
     ports:
       - "8585:5678"
     depends_on:
