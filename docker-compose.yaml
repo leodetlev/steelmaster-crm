@@ -13,7 +13,7 @@ services:
     container_name: steelmaster-twenty
     restart: always
     environment:
-      - PG_DATABASE_URL=${DB_URL}
+      - PG_DATABASE_URL=postgres://postgres:SteelMaster2026@Atlas@db.lgptxdzythxkoucafwjs.supabase.co:5432/postgres
       - REDIS_URL=redis://redis:6379
       - FRONT_END_URL=http://steelmaster.atlasbot.tech
       - SERVER_URL=http://steelmaster.atlasbot.tech
