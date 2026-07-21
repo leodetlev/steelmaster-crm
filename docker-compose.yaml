@@ -11,7 +11,7 @@ services:
     image: twentycrm/twenty:latest
     restart: always
     environment:
-      - PG_DATABASE_URL=postgres://postgres.lgptxdzythxkoucafwjs:SteelMaster2026%40Atlas@aws-0-sa-east-1.pooler.supabase.com:5432/postgres
+      - PG_DATABASE_URL=postgres://postgres.lgptxdzythxkoucafwjs:SteelMaster2026%40Atlas@aws-0-us-east-1.pooler.supabase.com:5432/postgres
       - REDIS_URL=redis://redis:6379
       - FRONT_END_URL=https://steelmaster.atlasbot.tech
       - SERVER_URL=https://steelmaster.atlasbot.tech
