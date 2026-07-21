@@ -3,26 +3,24 @@ version: '3.8'
 services:
   redis:
     image: redis:alpine
-    container_name: steelmaster-redis
     restart: always
     volumes:
       - redis_data:/data
 
   twenty:
     image: twentycrm/twenty:latest
-    container_name: steelmaster-twenty
     restart: always
     environment:
-      - PG_DATABASE_URL=postgres://postgres.lgptxdzythxkoucafwjs:SteelMaster2026%40Atlas@aws-0-sa-east-1.pooler.supabase.com:6543/postgres
+      - PG_DATABASE_URL=postgres://postgres.lgptxdzythxkoucafwjs:SteelMaster2026%40Atlas@aws-0-sa-east-1.pooler.supabase.com:5432/postgres
       - REDIS_URL=redis://redis:6379
-      - FRONT_END_URL=http://steelmaster.atlasbot.tech
-      - SERVER_URL=http://steelmaster.atlasbot.tech
+      - FRONT_END_URL=https://steelmaster.atlasbot.tech
+      - SERVER_URL=https://steelmaster.atlasbot.tech
       - ENCRYPTION_KEY=20y_s3cr3t_3ncrypt10n_st33lmast3r
       - ACCESS_TOKEN_SECRET=20y_s3cr3t_t0k3n_st33lmast3r
       - LOGIN_TOKEN_SECRET=20y_s3cr3t_l0g1n_st33lmast3r
       - REFRESH_TOKEN_SECRET=20y_s3cr3t_r3fr3sh_st33lmast3r
     ports:
-      - "4433:3000"
+      - "3000:3000"
     depends_on:
       - redis
     volumes:
