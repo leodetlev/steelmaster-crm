@@ -1,0 +1,72 @@
+{
+  "name": "Steel Master - Envio Pedido Fábrica",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "twenty-webhook-venda",
+        "options": {}
+      },
+      "name": "Webhook (Twenty Trigger)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "9b3c9b3c-9b3c-9b3c-9b3c-9b3c9b3c9b3c"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[\"body\"][\"opportunity\"][\"stage\"] }}",
+              "value2": "Fechamento"
+            }
+          ]
+        }
+      },
+      "name": "É Fechamento?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "ana@steelmaster.com",
+        "toEmail": "pedidos@fabrica.com.br",
+        "subject": "Novo Pedido Aprovado - Oportunidade: {{$json[\"body\"][\"opportunity\"][\"name\"]}}",
+        "text": "Olá equipe,\n\nSegue a confirmação do pedido aprovado.\n\nCliente/Empresa: {{$json[\"body\"][\"opportunity\"][\"company_name\"]}}\nValor: {{$json[\"body\"][\"opportunity\"][\"amount\"]}}\n\nPor favor, iniciem o processo de separação e entrega.\n\nAtenciosamente,\nAna",
+        "options": {}
+      },
+      "name": "Enviar E-mail para Fábrica",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook (Twenty Trigger)": {
+      "main": [
+        [
+          {
+            "node": "É Fechamento?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "É Fechamento?": {
+      "main": [
+        [
+          {
+            "node": "Enviar E-mail para Fábrica",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: steelmaster-db
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: steelmaster
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: steelmaster-redis
+    restart: always
+    volumes:
+      - redis_data:/data
+
+  twenty:
+    image: twentycrm/twenty:latest
+    container_name: steelmaster-twenty
+    restart: always
+    environment:
+      - PG_DATABASE_URL=postgres://root:password@postgres:5432/steelmaster
+      - REDIS_URL=redis://redis:6379
+      - FRONT_END_URL=http://localhost:4433
+      - SERVER_URL=http://localhost:4433
+      - ENCRYPTION_KEY=20y_s3cr3t_3ncrypt10n_st33lmast3r
+      - ACCESS_TOKEN_SECRET=20y_s3cr3t_t0k3n_st33lmast3r
+      - LOGIN_TOKEN_SECRET=20y_s3cr3t_l0g1n_st33lmast3r
+      - REFRESH_TOKEN_SECRET=20y_s3cr3t_r3fr3sh_st33lmast3r
+    ports:
+      - "4433:3000"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - twenty_data:/app/docker-data
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: steelmaster-n8n
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=steelmaster
+      - DB_POSTGRESDB_USER=root
+      - DB_POSTGRESDB_PASSWORD=password
+      - WEBHOOK_URL=http://localhost:8585
+    ports:
+      - "8585:5678"
+    depends_on:
+      - postgres
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  pg_data:
+  redis_data:
+  twenty_data:
+  n8n_data:

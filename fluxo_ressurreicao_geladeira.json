@@ -1,0 +1,103 @@
+{
+  "name": "Steel Master - O Robô da Geladeira (Retorno 30 Dias)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "name": "Cron (Todo dia 7h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://steelmaster-twenty:3000/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer SUA_CHAVE_AQUI"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "{ opportunities(filter: { data_proximo_contato: { eq: \"{{ $now.format('YYYY-MM-DD') }}\" } }) { id name stage } }"
+            }
+          ]
+        }
+      },
+      "name": "Twenty CRM (Buscar Geladeira)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://steelmaster-twenty:3000/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer SUA_CHAVE_AQUI"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "mutation { updateOpportunity(id: \"{{ $json['id'] }}\", input: { stage: \"Contato\" }) { id } }"
+            }
+          ]
+        }
+      },
+      "name": "Acordar Lead (Mover para Contato)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Cron (Todo dia 7h)": {
+      "main": [
+        [
+          {
+            "node": "Twenty CRM (Buscar Geladeira)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twenty CRM (Buscar Geladeira)": {
+      "main": [
+        [
+          {
+            "node": "Acordar Lead (Mover para Contato)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}
